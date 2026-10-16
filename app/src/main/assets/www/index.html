@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1222">
+<title>Smart Debt Messenger</title><link rel="stylesheet" href="style.css">
+<!-- XLSX support when online; CSV and JSON imports work offline. -->
+<script defer src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script><script defer src="app.js"></script>
+</head>
+<body>
+<header class="topbar"><div class="brand"><div class="logo">د</div><div><h1>Smart Debt Messenger</h1><p>إدارة ديون العملاء والتحصيل</p></div></div><button id="exportBtn" class="btn btn-outline">تصدير البيانات</button></header>
+<main class="container">
+<section class="hero"><div><span class="eyebrow">إدارة مالية مبسطة</span><h2>كل حسابات عملائك في مكان واحد</h2><p>ابحث عن العملاء، حدّث الأرصدة، واستعد رسائل التذكير قبل إرسالها.</p></div><div class="hero-icon">▤</div></section>
+<section class="stats-grid" aria-label="ملخص الحسابات"><article class="stat-card"><span class="stat-label">إجمالي المبالغ المستحقة</span><strong id="totalDebt" class="stat-value red">٠</strong><small>ريال</small></article><article class="stat-card"><span class="stat-label">العملاء المدينون</span><strong id="debtorCount" class="stat-value blue">٠</strong><small>عميل</small></article><article class="stat-card"><span class="stat-label">إجمالي العملاء</span><strong id="customerCount" class="stat-value green">٠</strong><small>عميل</small></article></section>
+<section class="panel"><div class="section-heading"><div><h2>العملاء</h2><p>تُحفظ التعديلات محليًا على هذا الجهاز.</p></div><button id="addToggle" class="btn btn-primary">＋ إضافة عميل</button></div>
+<form id="customerForm" class="form-grid hidden"><label>اسم العميل<input id="nameInput" required maxlength="120" placeholder="اسم العميل"></label><label>رقم الهاتف<input id="phoneInput" required inputmode="tel" maxlength="24" placeholder="05xxxxxxxx"></label><label>له (ريال)<input id="creditInput" type="number" min="0" step="0.01" value="0"></label><label>عليه (ريال)<input id="debitInput" type="number" min="0" step="0.01" value="0"></label><div class="form-actions"><button class="btn btn-primary" type="submit">حفظ العميل</button><button class="btn btn-muted" type="button" id="cancelAdd">إلغاء</button></div></form>
+<div class="toolbar"><label class="searchbox"><span>⌕</span><input id="searchInput" type="search" placeholder="ابحث بالاسم أو رقم الهاتف…" autocomplete="off"></label><select id="filterSelect" aria-label="تصفية العملاء"><option value="all">كل العملاء</option><option value="debtors">المدينون فقط</option><option value="creditors">لهم رصيد فقط</option></select><label class="btn btn-outline import-label">استيراد ملف<input id="importInput" type="file" accept=".csv,.txt,.json,.xlsx,.xls,.pdf,application/json,text/csv,application/pdf"></label></div>
+<p class="import-help">يدعم CSV وJSON دون اتصال. لاستيراد Excel ‏(.xlsx)، يلزم توفر اتصال بالإنترنت لتحميل مكتبة القراءة. ملفات PDF لا تُستورد تلقائيًا؛ حوّل جدولها إلى CSV أولًا.</p>
+<div id="notice" class="notice hidden" role="status"></div><div id="customerList" class="customer-list"></div><div id="emptyState" class="empty hidden"><div>⌕</div><strong>لا توجد نتائج</strong><p>أضف عميلًا أو غيّر كلمات البحث والتصفية.</p></div>
+</section>
+<section class="panel tips"><h2>تنبيه قبل إرسال الرسائل</h2><p>أزرار SMS تفتح تطبيق الرسائل برسالة جاهزة للمراجعة. لن تُرسل الرسائل تلقائيًا دون تأكيدك. تأكد من صحة الأرقام والأرصدة قبل الإرسال.</p></section>
+<footer>Smart Debt Messenger <span>•</span> بياناتك محفوظة محليًا على الجهاز</footer>
+</main>
+<dialog id="adjustDialog"><form id="adjustForm" method="dialog"><div class="dialog-head"><h2>تعديل رصيد العميل</h2><button type="button" id="closeDialog" class="icon-btn" aria-label="إغلاق">×</button></div><p id="adjustCustomerName" class="muted"></p><input id="adjustCustomerId" type="hidden"><label>نوع العملية<select id="adjustType"><option value="debit">إضافة مبلغ عليه (مديونية)</option><option value="credit">إضافة مبلغ له (رصيد لصالحه)</option><option value="payment">تسجيل دفعة مسددة</option></select></label><label>المبلغ (ريال)<input id="adjustAmount" type="number" min="0.01" step="0.01" required></label><label>ملاحظة (اختياري)<input id="adjustNote" maxlength="200" placeholder="سبب التعديل"></label><div class="form-actions"><button class="btn btn-primary" type="submit">حفظ التعديل</button><button type="button" id="cancelAdjust" class="btn btn-muted">إلغاء</button></div></form></dialog>
+</body></html>
